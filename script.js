@@ -13,6 +13,28 @@ request.onload = () => {
   // plot.innerHTML = JSON.stringify(json.data);
   console.log(JSON.stringify(json.data));
 
+  const w = 900;
+  const h = 450;
+  const svg = d3
+    .select("header")
+    .append("svg")
+    .attr("width", w)
+    .attr("height", h)
+    .style("background-color", "grey");
+
+  svg
+    .selectAll("rect")
+    .data(json.data)
+    .enter()
+    .append("rect")
+    .attr("width", 2)
+    .attr("height", d => d[1] / 50)
+    .attr("x", (d, i) => i * 3)
+    .attr("y", (d, i) => {
+      return h - d[1] / 50;
+    })
+    .style("color", "black");
+
   d3.select("#plot")
     .selectAll("div")
     .data(json.data)
