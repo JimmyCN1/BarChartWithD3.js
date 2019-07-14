@@ -1,6 +1,6 @@
 // document.addEventListener("DOMContentLoaded", () => {
 let plot = document.querySelector("#plot");
-console.log(plot);
+// console.log(plot);
 request = new XMLHttpRequest();
 request.open(
   "GET",
@@ -10,8 +10,7 @@ request.open(
 request.send();
 request.onload = () => {
   json = JSON.parse(request.responseText);
-  // plot.innerHTML = JSON.stringify(json.data);
-  console.log(JSON.stringify(json.data));
+  // console.log(JSON.stringify(json.data));
 
   const w = 900;
   const h = 450;
@@ -27,13 +26,26 @@ request.onload = () => {
     .data(json.data)
     .enter()
     .append("rect")
-    .attr("width", 2)
+    .attr("width", 3)
     .attr("height", d => d[1] / 50)
-    .attr("x", (d, i) => i * 3)
+    .attr("x", (d, i) => i * 3.2)
     .attr("y", (d, i) => {
       return h - d[1] / 50;
     })
-    .style("color", "black");
+    .attr("fill", "blue")
+    .attr("class", "bar");
+
+  svg
+    .selectAll("text")
+    .data(json.data)
+    .enter()
+    .append("text")
+    .attr("x", (d, i) => i * 3.2)
+    .attr("y", (d, i) => {
+      return h - d[1] / 50 - 10;
+    })
+    .text(d => d[0].substring(5))
+    .attr("font-size", "5px");
 
   d3.select("#plot")
     .selectAll("div")
@@ -45,6 +57,5 @@ request.onload = () => {
     .style("height", d => d[1] / 50 + "px")
     .style("margin", "0.5px")
     .style("background-color", "blue");
-  // .text((d, i) => d[1]);
 };
-// });
+// })
