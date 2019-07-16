@@ -1,5 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-let plot = document.querySelector("#plot");
 request = new XMLHttpRequest();
 request.open(
   "GET",
@@ -9,7 +7,6 @@ request.open(
 request.send();
 request.onload = () => {
   json = JSON.parse(request.responseText);
-  console.log(JSON.stringify(json.data));
 
   const margin = 70;
   const w = 1000 - margin * 2;
@@ -63,7 +60,7 @@ request.onload = () => {
     .attr("x", 0 - h / 2)
     .attr("dy", "1em")
     .style("text-anchor", "middle")
-    .text("Gross Domestic Product");
+    .text("Gross Domestic Product ($billions)");
 
   // Define the div for the tooltip
   let toolTip = d3
@@ -84,12 +81,10 @@ request.onload = () => {
     .attr("height", d => h - yScale(d[1]))
     .attr("fill", "#840032")
     .attr("class", "bar")
-    // .append("title")
-    // .text(d => d[1])
+    // define tooltip on mouseover
     .on("mouseover", d => {
       const year = d[0].substring(0, 4);
       const month = d[0].substring(5, 7);
-      console.log(month);
       const quarter = () => {
         if (month < 4) {
           return "Q1";
@@ -101,8 +96,6 @@ request.onload = () => {
           return "Q4";
         }
       };
-      console.log(quarter());
-      console.log(year);
       toolTip
         .transition()
         .duration(200)
@@ -125,8 +118,7 @@ request.onload = () => {
     .attr("x", w / 2)
     .attr("y", 0 - margin / 2 + 50)
     .attr("text-anchor", "middle")
-    .style("font-size", "16px")
+    .style("font-size", "25px")
     .style("text-decoration", "underline")
-    .text("GDP vs Date Graph");
+    .text("US Gross Domestic Product (1947 - 2015) ($billions)");
 };
-// })
