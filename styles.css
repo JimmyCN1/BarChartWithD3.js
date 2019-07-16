@@ -5,14 +5,16 @@ body {
   align-items: center;
   height: 100vh;
   min-height: 100vh;
+  background-color: #002642;
 }
 
 main {
-  width: 900px;
-  height: auto;
+  /* width: 400px; */
+  /* height: auto;
+  padding: 0px; */
+  background-color: white;
 }
 .bar {
-  background-color: green;
   display: inline-flex;
 }
 .bar:hover {
