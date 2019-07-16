@@ -87,36 +87,37 @@ request.onload = () => {
     // .append("title")
     // .text(d => d[1])
     .on("mouseover", d => {
-      console.log(1);
+      const year = d[0].substring(0, 4);
+      const month = d[0].substring(5, 7);
+      console.log(month);
+      const quarter = () => {
+        if (month < 4) {
+          return "Q1";
+        } else if (month < 7) {
+          return "Q2";
+        } else if (month < 10) {
+          return "Q3";
+        } else {
+          return "Q4";
+        }
+      };
+      console.log(quarter());
+      console.log(year);
       toolTip
         .transition()
         .duration(200)
-        // .style("display", "block")
         .style("opacity", 0.9);
       toolTip
-        .html(`Year: ${d[0]}<br/>$${d[1]} billion`)
+        .html(`Year: ${year} ${quarter()}<br/>$${d[1]} Billion`)
         .style("left", d3.event.pageX + "px")
         .style("top", d3.event.pageY - 28 + "px");
     })
     .on("mouseout", d => {
-      console.log(1);
       toolTip
         .transition()
         .duration(500)
-        // .style("display", "none")
         .style("opacity", 0);
     });
-
-  // add the text labels for the bars
-  // svg
-  //   .selectAll("text")
-  //   .data(json.data)
-  //   .enter()
-  //   .append("text")
-  //   .attr("x", d => xScale(new Date(d[0])))
-  //   .attr("y", d => yScale(d[1]))
-  //   .text(d => d[0].substring(5))
-  //   .attr("font-size", "5px");
 
   // add the plot title
   svg
