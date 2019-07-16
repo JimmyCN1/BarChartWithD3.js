@@ -10,10 +10,32 @@ request.open(
 request.send();
 request.onload = () => {
   json = JSON.parse(request.responseText);
-  // console.log(JSON.stringify(json.data));
+  console.log(JSON.stringify(json.data));
 
   const w = 900;
   const h = 450;
+  const padding = 30;
+  const myTimeFormat = d3.timeFormat("%Y-%m-%d");
+  console.log(myTimeFormat);
+
+  console.log(new Date(d3.min(json.data.map(d => d[0]))));
+  console.log(new Date(d3.max(json.data.map(d => d[0]))));
+
+  const xScale = d3
+    .scaleTime()
+    .domain([
+      new Date(d3.min(json.data.map(d => d[0]))),
+      new Date(d3.max(json.data.map(d => d[0])))
+    ])
+    .range([padding, w - padding]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(json.data, d => d[1])])
+    .range([h, 0]);
+
+  console.log(yScale(1000));
+
   const svg = d3
     .select("header")
     .append("svg")
@@ -26,14 +48,18 @@ request.onload = () => {
     .data(json.data)
     .enter()
     .append("rect")
+    .attr("x", d => xScale(new Date(d[0])))
+    .attr("y", d => yScale(d[1]))
     .attr("width", 3)
-    .attr("height", d => d[1] / 50)
-    .attr("x", (d, i) => i * 3.2)
-    .attr("y", (d, i) => {
-      return h - d[1] / 50;
-    })
+    .attr("height", d => h - yScale(d[1]))
+    // .attr("x", (d, i) => i * 3.2)
+    // .attr("y", (d, i) => {
+    //   return h - d[1] / 50;
+    // })
     .attr("fill", "blue")
-    .attr("class", "bar");
+    .attr("class", "bar")
+    .append("title")
+    .text(d => d[1]);
 
   svg
     .selectAll("text")

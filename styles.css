@@ -13,7 +13,7 @@ main {
 }
 .bar {
   background-color: green;
-  display: inline-block;
+  display: inline-flex;
 }
 .bar:hover {
   fill: white;
