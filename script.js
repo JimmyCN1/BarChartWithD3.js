@@ -1,6 +1,5 @@
 // document.addEventListener("DOMContentLoaded", () => {
 let plot = document.querySelector("#plot");
-// console.log(plot);
 request = new XMLHttpRequest();
 request.open(
   "GET",
@@ -16,8 +15,7 @@ request.onload = () => {
   const w = 1000 - margin * 2;
   const h = 450;
 
-  const myTimeFormat = d3.timeFormat("%Y-%m-%d");
-
+  // define x and y scales
   const xScale = d3
     .scaleTime()
     .domain([
@@ -31,6 +29,7 @@ request.onload = () => {
     .domain([0, d3.max(json.data, d => d[1])])
     .range([h, 0]);
 
+  // define svg plot area
   let svg = d3
     .select("main")
     .append("svg")
@@ -40,19 +39,23 @@ request.onload = () => {
     .attr("transform", "translate(" + margin + "," + margin + ")")
     .style("background-color", "white");
 
-  svg.append("g").call(d3.axisLeft(yScale));
-
+  // add x-axis
   svg
     .append("g")
     .attr("transform", `translate(0, ${h})`)
     .call(d3.axisBottom(xScale));
 
+  // add y-axis
+  svg.append("g").call(d3.axisLeft(yScale));
+
+  // add x-axis label
   svg
     .append("text")
     .attr("transform", "translate(" + w / 2 + " ," + (h + 40) + ")")
     .style("text-anchor", "middle")
-    .text("Date");
+    .text("Year");
 
+  // add y-axis label
   svg
     .append("text")
     .attr("transform", "rotate(-90)")
@@ -60,8 +63,16 @@ request.onload = () => {
     .attr("x", 0 - h / 2)
     .attr("dy", "1em")
     .style("text-anchor", "middle")
-    .text("Value");
+    .text("Gross Domestic Product");
 
+  // Define the div for the tooltip
+  let toolTip = d3
+    .select("main")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+  // add bars
   svg
     .selectAll("rect")
     .data(json.data)
@@ -73,19 +84,41 @@ request.onload = () => {
     .attr("height", d => h - yScale(d[1]))
     .attr("fill", "#840032")
     .attr("class", "bar")
-    .append("title")
-    .text(d => d[1]);
+    // .append("title")
+    // .text(d => d[1])
+    .on("mouseover", d => {
+      console.log(1);
+      toolTip
+        .transition()
+        .duration(200)
+        // .style("display", "block")
+        .style("opacity", 0.9);
+      toolTip
+        .html(`Year: ${d[0]}<br/>$${d[1]} billion`)
+        .style("left", d3.event.pageX + "px")
+        .style("top", d3.event.pageY - 28 + "px");
+    })
+    .on("mouseout", d => {
+      console.log(1);
+      toolTip
+        .transition()
+        .duration(500)
+        // .style("display", "none")
+        .style("opacity", 0);
+    });
 
-  svg
-    .selectAll("text")
-    .data(json.data)
-    .enter()
-    .append("text")
-    .attr("x", d => xScale(new Date(d[0])))
-    .attr("y", d => yScale(d[1]))
-    .text(d => d[0].substring(5))
-    .attr("font-size", "5px");
+  // add the text labels for the bars
+  // svg
+  //   .selectAll("text")
+  //   .data(json.data)
+  //   .enter()
+  //   .append("text")
+  //   .attr("x", d => xScale(new Date(d[0])))
+  //   .attr("y", d => yScale(d[1]))
+  //   .text(d => d[0].substring(5))
+  //   .attr("font-size", "5px");
 
+  // add the plot title
   svg
     .append("text")
     .attr("x", w / 2)
@@ -93,6 +126,6 @@ request.onload = () => {
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("text-decoration", "underline")
-    .text("Value vs Date Graph");
+    .text("GDP vs Date Graph");
 };
 // })
