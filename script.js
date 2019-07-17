@@ -99,7 +99,7 @@ request.onload = () => {
       toolTip
         .transition()
         .duration(200)
-        .style("opacity", 0.9);
+        .style("opacity", 0.1);
       toolTip
         .html(`Year: ${year} ${quarter()}<br/>$${d[1]} Billion`)
         .style("left", d3.event.pageX + "px")
